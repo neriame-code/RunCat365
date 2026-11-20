@@ -380,6 +380,60 @@ namespace RunCat365.Properties {
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Menu_Todo {
+            get {
+                return ResourceManager.GetString("Menu_Todo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Window_Todo {
+            get {
+                return ResourceManager.GetString("Window_Todo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to New task.
+        /// </summary>
+        internal static string Todo_Placeholder {
+            get {
+                return ResourceManager.GetString("Todo_Placeholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        internal static string Todo_Add {
+            get {
+                return ResourceManager.GetString("Todo_Add", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Todo_Delete {
+            get {
+                return ResourceManager.GetString("Todo_Delete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to save the TODO list..
+        /// </summary>
+        internal static string Todo_SaveFailed {
+            get {
+                return ResourceManager.GetString("Todo_SaveFailed", resourceCulture);
+            }
+        }
+
         internal static string CustomRunner_AddedRunners {
             get {
                 return ResourceManager.GetString("CustomRunner_AddedRunners", resourceCulture);

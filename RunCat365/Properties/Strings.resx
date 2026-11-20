@@ -246,6 +246,24 @@
   <data name="Window_CustomRunners" xml:space="preserve">
     <value>Custom Runners</value>
   </data>
+  <data name="Menu_Todo" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Window_Todo" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Todo_Placeholder" xml:space="preserve">
+    <value>New task</value>
+  </data>
+  <data name="Todo_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Todo_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Todo_SaveFailed" xml:space="preserve">
+    <value>Failed to save the TODO list.</value>
+  </data>
   <data name="CustomRunner_AddedRunners" xml:space="preserve">
     <value>Custom Runners:</value>
   </data>

@@ -24,6 +24,7 @@ namespace RunCat365
         private readonly List<Icon> icons = [];
         private readonly Lock iconLock = new();
         private int current = 0;
+        private TodoForm? todoForm;
         private CustomRunnerForm? customRunnerForm;
         private List<Bitmap>? customRunnerSourceFrames;
 
@@ -164,6 +165,9 @@ namespace RunCat365
                 customRunnerRepository, onCustomRunnerDeleted
             );
 
+            var todoMenu = new CustomToolStripMenuItem(Strings.Menu_Todo);
+            todoMenu.Click += (sender, e) => ShowOrActivateTodoWindow();
+
             var appVersionMenu = new CustomToolStripMenuItem(
                 $"{Application.ProductName} v{Application.ProductVersion}"
             )
@@ -192,6 +196,7 @@ namespace RunCat365
                 new ToolStripSeparator(),
                 settingsMenu,
                 informationMenu,
+                todoMenu,
                 new ToolStripSeparator(),
                 exitMenu
             );
@@ -398,6 +403,23 @@ namespace RunCat365
 
         }
 
+        private void ShowOrActivateTodoWindow()
+        {
+            if (todoForm is null)
+            {
+                todoForm = new TodoForm();
+                todoForm.FormClosed += (sender, e) =>
+                {
+                    todoForm = null;
+                };
+                todoForm.Show();
+            }
+            else
+            {
+                todoForm.Activate();
+            }
+        }
+
         private void ShowOrActivateCustomRunnerWindow(
             CustomRunnerRepository repository,
             Action<string> onCustomRunnerDeleted
@@ -474,6 +496,7 @@ namespace RunCat365
                     notifyIcon.Dispose();
                 }
 
+                todoForm?.Dispose();
                 customRunnerForm?.Dispose();
             }
         }
