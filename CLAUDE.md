@@ -33,7 +33,7 @@ Windows Forms application (.NET 9.0 / C#) distributed via the Microsoft Store. R
 - **Animation loop:** A 1-second fetch timer refreshes the `*Info` structs; a separate animate timer advances frames at a rate derived from the `SpeedSource` setting. Theme-aware icon recoloring lives in `BitmapExtension`.
 - **Custom runners:** User-defined animations are loaded from `profiles.json` and managed by the `CustomRunner*` classes; the active profile is stored in the `CustomRunnerName` setting.
 - **EndlessGame:** Mini-game living in `EndlessGameForm` and its collaborator classes.
-- **Settings & resources:** Persisted user preferences in `Properties/UserSettings.settings`; embedded images/icons in `Properties/Resources.resx`.
+- **Settings & resources:** Persisted user preferences in `%LOCALAPPDATA%\RunCat365\settings.json` via `UserSettings` (migrated once from the legacy `user.config`); embedded images/icons in `Properties/Resources.resx`.
 
 ## Localization
 

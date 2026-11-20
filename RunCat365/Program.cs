@@ -13,7 +13,6 @@
 //    limitations under the License.
 
 using Microsoft.Win32;
-using RunCat365.Properties;
 using System.Diagnostics;
 using System.Globalization;
 using FormsTimer = System.Windows.Forms.Timer;
@@ -76,7 +75,6 @@ namespace RunCat365
 
         public RunCat365ApplicationContext()
         {
-            UserSettings.Default.Reload();
             _ = Enum.TryParse(UserSettings.Default.Runner, out runner);
             _ = Enum.TryParse(UserSettings.Default.Theme, out manualTheme);
             _ = Enum.TryParse(UserSettings.Default.TemperatureUnit, out temperatureUnit);
