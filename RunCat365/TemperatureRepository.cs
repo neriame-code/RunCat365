@@ -57,48 +57,28 @@ namespace RunCat365
         }
     }
 
-    internal sealed class TemperaturePerformanceCounters : InstancedPerformanceCounters
-    {
-        protected override string CategoryName => "Thermal Zone Information";
-        protected override string CounterName => "Temperature";
-
-        internal static TemperaturePerformanceCounters? TryCreate()
-        {
-            var instance = new TemperaturePerformanceCounters();
-            return instance.TryInitialize() ? instance : null;
-        }
-    }
-
     internal class TemperatureRepository
     {
         private const float KELVIN_TO_CELSIUS_OFFSET = 273.15f;
         private const float MIN_VALID_TEMPERATURE_CELSIUS = -50.0f;
         private const float MAX_VALID_TEMPERATURE_CELSIUS = 150.0f;
-        private const int REFRESH_INTERVAL_TICKS = 30;
+        private const string COUNTER_PATH = @"\Thermal Zone Information(*)\Temperature";
 
-        private readonly TemperaturePerformanceCounters? counters;
+        private readonly PDHWildcardCounter? counter;
         private TemperatureInfo? temperatureInfo;
-        private int ticksSinceLastRefresh;
 
-        internal bool IsAvailable => counters is not null;
+        internal bool IsAvailable => counter is not null;
 
         internal TemperatureRepository()
         {
-            counters = TemperaturePerformanceCounters.TryCreate();
+            counter = PDHWildcardCounter.TryCreate(COUNTER_PATH);
         }
 
         internal void Update()
         {
-            if (counters is null) return;
+            if (counter is null) return;
 
-            ticksSinceLastRefresh += 1;
-            if (REFRESH_INTERVAL_TICKS <= ticksSinceLastRefresh)
-            {
-                ticksSinceLastRefresh = 0;
-                counters.RefreshInstances();
-            }
-
-            var rawValues = counters.ReadValues();
+            var rawValues = counter.ReadValues();
             var temperaturesCelsius = new List<float>(rawValues.Count);
             foreach (var temperatureKelvin in rawValues)
             {
@@ -124,7 +104,7 @@ namespace RunCat365
 
         internal void Close()
         {
-            counters?.Close();
+            counter?.Dispose();
         }
     }
 }

@@ -41,53 +41,26 @@ namespace RunCat365
         }
     }
 
-    internal sealed class GPUPerformanceCounters : InstancedPerformanceCounters
-    {
-        private const string ENGINE_TYPE_FILTER = "engtype_3D";
-
-        protected override string CategoryName => "GPU Engine";
-        protected override string CounterName => "Utilization Percentage";
-
-        protected override bool ShouldIncludeInstance(string instanceName)
-        {
-            return instanceName.Contains(ENGINE_TYPE_FILTER, StringComparison.Ordinal);
-        }
-
-        internal static GPUPerformanceCounters? TryCreate()
-        {
-            var instance = new GPUPerformanceCounters();
-            return instance.TryInitialize() ? instance : null;
-        }
-    }
-
     internal class GPURepository
     {
         private const int GPU_INFO_LIST_LIMIT_SIZE = 5;
-        private const int REFRESH_INTERVAL_TICKS = 30;
+        private const string COUNTER_PATH = @"\GPU Engine(*engtype_3D)\Utilization Percentage";
 
-        private readonly GPUPerformanceCounters? counters;
+        private readonly PDHWildcardCounter? counter;
         private readonly List<GPUInfo> gpuInfoList = [];
-        private int ticksSinceLastRefresh;
 
-        internal bool IsAvailable => counters is not null;
+        internal bool IsAvailable => counter is not null;
 
         internal GPURepository()
         {
-            counters = GPUPerformanceCounters.TryCreate();
+            counter = PDHWildcardCounter.TryCreate(COUNTER_PATH);
         }
 
         internal void Update()
         {
-            if (counters is null) return;
+            if (counter is null) return;
 
-            ticksSinceLastRefresh += 1;
-            if (REFRESH_INTERVAL_TICKS <= ticksSinceLastRefresh)
-            {
-                ticksSinceLastRefresh = 0;
-                counters.RefreshInstances();
-            }
-
-            var values = counters.ReadValues();
+            var values = counter.ReadValues();
             if (values.Count == 0) return;
 
             var gpuInfo = new GPUInfo
@@ -105,7 +78,7 @@ namespace RunCat365
 
         internal GPUInfo? Get()
         {
-            if (counters is null || gpuInfoList.Count == 0) return null;
+            if (counter is null || gpuInfoList.Count == 0) return null;
 
             return new GPUInfo
             {
@@ -116,7 +89,7 @@ namespace RunCat365
 
         internal void Close()
         {
-            counters?.Close();
+            counter?.Dispose();
         }
     }
 }
