@@ -13,7 +13,7 @@
 //    limitations under the License.
 
 using RunCat365.Properties;
-using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace RunCat365
 {
@@ -45,106 +45,39 @@ namespace RunCat365
         }
     }
 
-    internal class CPUPerformanceCounters
+    internal partial class CPURepository
     {
-        private const string PROCESSOR_INFORMATION_CATEGORY = "Processor Information";
-        private const string PROCESSOR_CATEGORY = "Processor";
-        private const string TOTAL_INSTANCE = "_Total";
-        private const string PROCESSOR_UTILITY_COUNTER = "% Processor Utility";
-        private const string PROCESSOR_TIME_COUNTER = "% Processor Time";
-        private const string USER_TIME_COUNTER = "% User Time";
-        private const string PRIVILEGED_TIME_COUNTER = "% Privileged Time";
-        private const int PROCESSOR_TIME_BASED_TASK_MANAGER_MINIMUM_BUILD = 26100;
-
-        internal PerformanceCounter Total { get; }
-        internal PerformanceCounter User { get; }
-        internal PerformanceCounter Kernel { get; }
-
-        private CPUPerformanceCounters(
-            PerformanceCounter total,
-            PerformanceCounter user,
-            PerformanceCounter kernel)
-        {
-            Total = total;
-            User = user;
-            Kernel = kernel;
-        }
-
-        internal static CPUPerformanceCounters? TryCreate()
-        {
-            return TryCreateFromCategory(PROCESSOR_INFORMATION_CATEGORY, TOTAL_INSTANCE)
-                ?? TryCreateFromCategory(PROCESSOR_CATEGORY, TOTAL_INSTANCE);
-        }
-
-        private static bool TaskManagerUsesProcessorTime()
-        {
-            return PROCESSOR_TIME_BASED_TASK_MANAGER_MINIMUM_BUILD <= Environment.OSVersion.Version.Build;
-        }
-
-        private static CPUPerformanceCounters? TryCreateFromCategory(string categoryName, string instanceName)
-        {
-            PerformanceCounter? total = null;
-            PerformanceCounter? user = null;
-            PerformanceCounter? kernel = null;
-            if (!TaskManagerUsesProcessorTime())
-            {
-                try
-                {
-                    total = new PerformanceCounter(categoryName, PROCESSOR_UTILITY_COUNTER, instanceName);
-                }
-                catch
-                {
-                    total?.Close();
-                    total = null;
-                }
-            }
-            try
-            {
-                total ??= new PerformanceCounter(categoryName, PROCESSOR_TIME_COUNTER, instanceName);
-                user = new PerformanceCounter(categoryName, USER_TIME_COUNTER, instanceName);
-                kernel = new PerformanceCounter(categoryName, PRIVILEGED_TIME_COUNTER, instanceName);
-                _ = total.NextValue();
-                _ = user.NextValue();
-                _ = kernel.NextValue();
-                return new CPUPerformanceCounters(total, user, kernel);
-            }
-            catch
-            {
-                total?.Close();
-                user?.Close();
-                kernel?.Close();
-                return null;
-            }
-        }
-
-        internal void Close()
-        {
-            Total.Close();
-            User.Close();
-            Kernel.Close();
-        }
-    }
-
-    internal class CPURepository
-    {
-        private readonly CPUPerformanceCounters? counters;
         private readonly List<CPUInfo> cpuInfoList = [];
         private const int CPU_INFO_LIST_LIMIT_SIZE = 5;
+        private long previousIdleTime;
+        private long previousKernelTime;
+        private long previousUserTime;
 
-        internal bool IsAvailable => counters is not null;
+        internal bool IsAvailable { get; }
 
         internal CPURepository()
         {
-            counters = CPUPerformanceCounters.TryCreate();
+            IsAvailable = GetSystemTimes(out previousIdleTime, out previousKernelTime, out previousUserTime);
         }
 
         internal void Update()
         {
-            if (counters is null) return;
+            if (!IsAvailable) return;
+            if (!GetSystemTimes(out var idleTime, out var kernelTime, out var userTime)) return;
 
-            var total = Math.Min(100, counters.Total.NextValue());
-            var user = Math.Min(100, counters.User.NextValue());
-            var kernel = Math.Min(100, counters.Kernel.NextValue());
+            var idleDelta = idleTime - previousIdleTime;
+            var kernelDelta = kernelTime - previousKernelTime;
+            var userDelta = userTime - previousUserTime;
+            previousIdleTime = idleTime;
+            previousKernelTime = kernelTime;
+            previousUserTime = userTime;
+
+            var elapsed = kernelDelta + userDelta;
+            if (elapsed <= 0) return;
+
+            var total = Math.Clamp(100f * (elapsed - idleDelta) / elapsed, 0, 100);
+            var user = Math.Clamp(100f * userDelta / elapsed, 0, 100);
+            var kernel = Math.Clamp(100f * (kernelDelta - idleDelta) / elapsed, 0, 100);
             var idle = Math.Max(0, 100 - user - kernel);
 
             var cpuInfo = new CPUInfo
@@ -177,7 +110,10 @@ namespace RunCat365
 
         internal void Close()
         {
-            counters?.Close();
         }
+
+        [LibraryImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool GetSystemTimes(out long idleTime, out long kernelTime, out long userTime);
     }
 }
