@@ -13,6 +13,7 @@
 //    limitations under the License.
 
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 using Windows.ApplicationModel;
 
 namespace RunCat365
@@ -106,8 +107,9 @@ namespace RunCat365
         }
     }
 
-    internal class LaunchAtStartupManager
+    internal partial class LaunchAtStartupManager
     {
+        private const int APPMODEL_ERROR_NO_PACKAGE = 15700;
         private readonly ILaunchAtStartupManager launchAtStartupManager;
 
         public LaunchAtStartupManager()
@@ -123,15 +125,11 @@ namespace RunCat365
 
         private static bool IsRunningAsPackaged()
         {
-            try
-            {
-                _ = Package.Current;
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
+            uint length = 0;
+            return GetCurrentPackageFullName(ref length, nint.Zero) != APPMODEL_ERROR_NO_PACKAGE;
         }
+
+        [LibraryImport("kernel32.dll")]
+        private static partial int GetCurrentPackageFullName(ref uint packageFullNameLength, nint packageFullName);
     }
 }
