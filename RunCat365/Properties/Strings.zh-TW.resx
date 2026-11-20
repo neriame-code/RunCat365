@@ -132,9 +132,6 @@
   <data name="Menu_Settings" xml:space="preserve">
     <value>設定</value>
   </data>
-  <data name="Menu_EndlessGame" xml:space="preserve">
-    <value>無盡遊戲</value>
-  </data>
   <data name="Menu_Information" xml:space="preserve">
     <value>資訊</value>
   </data>
@@ -179,15 +176,6 @@
   </data>
   <data name="Message_Warning" xml:space="preserve">
     <value>警告</value>
-  </data>
-  <data name="Window_EndlessGame" xml:space="preserve">
-    <value>無盡遊戲</value>
-  </data>
-  <data name="Game_PressSpaceToPlay" xml:space="preserve">
-    <value>按空白鍵開始。</value>
-  </data>
-  <data name="Game_GameOver" xml:space="preserve">
-    <value>遊戲結束</value>
   </data>
   <data name="SystemInfo_CPU" xml:space="preserve">
     <value>CPU</value>
@@ -242,9 +230,6 @@
   </data>
   <data name="Menu_SpeedSource" xml:space="preserve">
     <value>速度來源</value>
-  </data>
-  <data name="Game_NewRecord" xml:space="preserve">
-    <value>新紀錄</value>
   </data>
   <data name="SystemInfo_Temperature" xml:space="preserve">
     <value>溫度</value>

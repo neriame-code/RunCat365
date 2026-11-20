@@ -57,43 +57,6 @@ namespace RunCat365.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to GAME OVER.
-        /// </summary>
-        internal static string Game_GameOver {
-            get {
-                return ResourceManager.GetString("Game_GameOver", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Press space to play..
-        /// </summary>
-        internal static string Game_PressSpaceToPlay {
-            get {
-                return ResourceManager.GetString("Game_PressSpaceToPlay", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to New Record.
-        /// </summary>
-        internal static string Game_NewRecord
-        {
-            get
-            {
-                return ResourceManager.GetString("Game_NewRecord", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Endless Game.
-        /// </summary>
-        internal static string Menu_EndlessGame {
-            get {
-                return ResourceManager.GetString("Menu_EndlessGame", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
         internal static string Menu_Exit {
@@ -249,15 +212,6 @@ namespace RunCat365.Properties {
         internal static string Theme_System {
             get {
                 return ResourceManager.GetString("Theme_System", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Endless Game.
-        /// </summary>
-        internal static string Window_EndlessGame {
-            get {
-                return ResourceManager.GetString("Window_EndlessGame", resourceCulture);
             }
         }
 

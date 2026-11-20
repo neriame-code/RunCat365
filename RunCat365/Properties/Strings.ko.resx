@@ -132,9 +132,6 @@
   <data name="Menu_Settings" xml:space="preserve">
     <value>설정</value>
   </data>
-  <data name="Menu_EndlessGame" xml:space="preserve">
-    <value>무한 게임</value>
-  </data>
   <data name="Menu_Information" xml:space="preserve">
     <value>정보</value>
   </data>
@@ -179,15 +176,6 @@
   </data>
   <data name="Message_Warning" xml:space="preserve">
     <value>경고</value>
-  </data>
-  <data name="Window_EndlessGame" xml:space="preserve">
-    <value>무한 게임</value>
-  </data>
-  <data name="Game_PressSpaceToPlay" xml:space="preserve">
-    <value>스페이스바를 눌러 시작하세요.</value>
-  </data>
-  <data name="Game_GameOver" xml:space="preserve">
-    <value>게임 오버</value>
   </data>
   <data name="SystemInfo_CPU" xml:space="preserve">
     <value>CPU</value>
@@ -242,9 +230,6 @@
   </data>
   <data name="Menu_SpeedSource" xml:space="preserve">
     <value>달리기 속도 기준</value>
-  </data>
-  <data name="Game_NewRecord" xml:space="preserve">
-    <value>최고 기록 달성!</value>
   </data>
   <data name="SystemInfo_Temperature" xml:space="preserve">
     <value>온도</value>

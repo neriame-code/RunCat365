@@ -24,7 +24,6 @@ namespace RunCat365
         private readonly List<Icon> icons = [];
         private readonly Lock iconLock = new();
         private int current = 0;
-        private EndlessGameForm? endlessGameForm;
         private CustomRunnerForm? customRunnerForm;
         private List<Bitmap>? customRunnerSourceFrames;
 
@@ -165,9 +164,6 @@ namespace RunCat365
                 customRunnerRepository, onCustomRunnerDeleted
             );
 
-            var endlessGameMenu = new CustomToolStripMenuItem(Strings.Menu_EndlessGame);
-            endlessGameMenu.Click += (sender, e) => ShowOrActivateGameWindow(getSystemTheme);
-
             var appVersionMenu = new CustomToolStripMenuItem(
                 $"{Application.ProductName} v{Application.ProductVersion}"
             )
@@ -196,7 +192,6 @@ namespace RunCat365
                 new ToolStripSeparator(),
                 settingsMenu,
                 informationMenu,
-                endlessGameMenu,
                 new ToolStripSeparator(),
                 exitMenu
             );
@@ -403,23 +398,6 @@ namespace RunCat365
 
         }
 
-        private void ShowOrActivateGameWindow(Func<Theme> getSystemTheme)
-        {
-            if (endlessGameForm is null)
-            {
-                endlessGameForm = new EndlessGameForm(getSystemTheme());
-                endlessGameForm.FormClosed += (sender, e) =>
-                {
-                    endlessGameForm = null;
-                };
-                endlessGameForm.Show();
-            }
-            else
-            {
-                endlessGameForm.Activate();
-            }
-        }
-
         private void ShowOrActivateCustomRunnerWindow(
             CustomRunnerRepository repository,
             Action<string> onCustomRunnerDeleted
@@ -496,7 +474,6 @@ namespace RunCat365
                     notifyIcon.Dispose();
                 }
 
-                endlessGameForm?.Dispose();
                 customRunnerForm?.Dispose();
             }
         }
